@@ -1,0 +1,7 @@
+Use these settings in your web applications.
+
+Database host address:LuTi.mysql.pythonanywhere-services.com
+Username:LuTi
+Password: D@t@rep19
+Start a console on:LuTi$Library
+Start a console on:LuTi$default

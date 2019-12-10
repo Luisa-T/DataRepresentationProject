@@ -1,0 +1,281 @@
+<html>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<head>
+    <title>Library Luisa Timothy</title>
+</head>
+<body>
+    <h1>Library</h1>
+    <button onclick="createBooks">Create</button>
+    <h2>All Books</h2>
+    <table border="3" cellpadding="5" cellspacing="0" align="center" class="table" id="BooksTable">
+        <tr>
+            <th>Author</th>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Owned by</th>
+            <th>Format</th>
+        </tr>
+        <tr id="1">
+            <td>Fred Vargas</td>
+            <td>Der Zorn der Einsiedler</td>
+            <td>Crime</td>
+            <td>Yourself</td>
+            <td>Hardback</td>
+            <td><button id="doUpdateButton">Update</button></td>
+            <td><button id="doDeleteButton">Delete</button></td>
+        </tr>
+            <tr id="2">
+            <td>Umberto Eco</td>
+            <td>Numero Zero</td>
+            <td>Contemporary Fiction</td>
+            <td>Yourself</td>
+            <td>Hardback</td>
+            <td><button id="doUpdateButton">Update</button></td>
+            <td><button id="doDeleteButton">Delete</button></td>
+        </tr>
+        <tr id="3">
+            <td>Steve Cavanagh</td>
+            <td>Twisted</td>
+            <td>Crime</td>
+            <td>Yourself</td>
+            <td>Paperback</td>
+            <td><button id="doUpdateButton">Update</button></td>
+            <td><button id="doDeleteButton">Delete</button></td>
+        </tr>
+    </table>
+    <div id="createUpdateForm" style="display: none">
+        <form hidden>
+            <h2><span id="createLabel">Create a</span><span id="updateLabel">Update this</span>Book</h2>
+            Author <input type="text"></input><br/>
+            Title <input type="text"></input><br/>
+            Genre <select name="Genre"><br/>
+                <option value="Crime">Crime</option>
+                <option value="Classic">Classic</option>
+                <option value="Contemporary Fiction">Contemporary Fiction</option>
+                <option value="Non-Fiction">Non-Fiction</option>
+                <option value="Textbook">Textbook</option>
+            Owned By <select name="Owned By"><br/>
+                <option value="Yourself">Yourself</option>
+                <option value="Library">Library</option>
+            Format <select name="Format"><br/>
+                <option value="Hardback">Hardback</option>
+                <option value="Paperback">Paperback</option>
+                <option value="Audiobook">Audiobook</option>
+                <option value="Ebook">Ebook</option>
+                <option value="E-Audiobook">E-Audiobook</option>
+            <span><button id="showCreateButton" onclick="showCreate()">Create</button></span>
+            <span><button id="showUpdateButton" onclick="showUpdate(this)">Update</button></span>
+            <span><button id="doCreateButton" onclick="doCreate()">Create</button></span>
+            <span><button id="doUpdateButton" onclick="doUpdate()">Update</button></span>
+            <div id="createUpdateForm" type="none"></div>
+            <button id="showCreateButton" onclick="showCreate()"></button>
+        </form>
+    </div>
+    <script>
+        function doCreate(){
+            document.getElementById('showCreateButton').style.display="none"
+            document.getElementById('BooksTable').style.display="none"
+            document.getElementById('createUpdateForm').style.display="block"
+            document.getElementById('createLabel').style.display="inline"
+            document.getElementById('updateLabel').style.display="none"
+            document.getElementById('doCreateButton').style.display="block"
+            document.getElementById('doUpdateButton').style.display="none"
+        }
+        function showUpdate(){
+            document.getElementById('showCreateButton').style.display="none"
+            document.getElementById('bookTable').style.display="none"
+            document.getElementById('createUpdateForm').style.display="block"
+            document.getElementById('createLabel').style.display="none"
+            document.getElementById('updateLabel').style.display="inline"
+            document.getElementById('doCreateButton').style.display="none"
+            document.getElementById('doUpdateButton').style.display="block"
+        }
+        function showViewAll(){
+            document.getElementById('showCreateButton').style.display="block"
+            document.getElementById('BooksTable').style.display="block"
+            document.getElementById('createUpdateForm').style.display="none"
+        }
+        function clearForm(){
+            var form = document.getElementById('createUpdateForm')
+            form.querySelector('input[name="Author"]').disabled = false
+            form.querySelector('input[name="Title"]').value = ''
+            form.querySelector('input[name="Genre"]').value = ''
+            form.querySelector('input[name="Owned By"]').value = ''
+            form.querySelector('input[name="Format"]').value = ''
+        }
+        function doCreate(){
+            document.getElementById('showCreateButton').style.display="none"
+            document.getElementById('BooksTable').style.display="none"
+            document.getElementById('createUpdateForm').style.display="block"
+            document.getElementById('createLabel').style.display="inline"
+            document.getElementById('updateLabel').style.display="none"
+            document.getElementById('doCreateButton').style.display="block"
+            document.getElementById('doUpdateButton').style.display="none"
+            clearForm()
+            showViewAll()
+            var Books = {}
+            Books.Author = form.querySelector('input[name="Author"]').value = ''
+            Books.Title = form.querySelector('input[name="Title"]').value = ''
+            Books.Genre = form.querySelector('input[name="Genre"]').value = ''
+            Books.Owned_By = form.querySelector('input[name="Owned By"]').value = ''
+            Books.Format = form.querySelector('input[name="Format"]').value = ''
+        }
+        function addBooksToTable(Books){
+            rowElement.setAttribute('id', Books.Author)
+            var tableElement = document.getElementById('BooksTable');
+            var rowElement = tableElement.insertRow(-1);
+            rowElement.setAttribute('id', Books.id)
+            var cell1 = rowElement.insertCell(0);
+            cell1.innerHTML = Books.Author
+            var cell1 = rowElement.insertCell(1);
+            cell1.innerHTML = Books.Title                    
+            var cell1 = rowElement.insertCell(2);
+            cell1.innerHTML = Books.Genre
+            var cell1 = rowElement.insertCell(3);
+            cell1.innerHTML = Books.Owned_By
+            var cell1 = rowElement.insertCell(4);
+            cell1.innerHTML = Books.Format
+            var cell1 = rowElement.insertCell(5);
+            cell1.innerHTML = <button onclick =  "showUpdate(this)">Update</button>
+            var cell1 = rowElement.insertCell(6);
+            cell1.innerHTML = <button onclick =  "doDelete(this)">Delete</button>
+        }
+        function getBooksFromRow(rowElement){
+            var Books = {}
+            Books.Author = rowElement.cells[0].firstChild.textContent
+            Books.Title = rowElement.cells[1].firstChild.textContent
+            Books.Genre = rowElement.cells[2].firstChild.textContent
+            Books.Owned_By = rowElement.cells[3].firstChild.textContent
+            Books.Format = rowElement.cells[4].firstChild.textContent
+            return Books
+        }
+        function populateFormWithBooks(Books){
+            var form = document.getElementById('createUpdateForm')
+            form.querySelector('input[name="Author"]').disabled = true
+
+            form.querySelector('input[name="Author"').value = Books.Author
+            form.querySelector('input[name="Title"]').value = Books.Title
+            form.querySelector('input[name="Genre"]').value = Books.Genre
+            form.querySelector('input[name="Owned By"]').value = Books.Owned_by
+            form.querySelector('input[name="Format"]').value = Books.Format
+        }
+        function doUpdate(){
+            var Books = getBooksFromForm();
+            var rowElement = document.getElementById(Books.id);
+            updateBookAjax(Books);
+            setBookInRow(rowElement,Books);
+        
+            clearForm();
+            showViewAll();
+        }
+        function getBookFromForm(){
+            var form = getElementById('createUpdateForm')
+            var Books = {}
+            Books.Author = form.querySelector('input[name = "Author"]').value
+            Books.Title = form.querySelector('input[name = "Title"]').value
+            Books.Genre = form.querySelector('input[name = "Genre"]').value
+            Books.Owned_By = form.querySelector('input[name = "Owned By"]').value
+            Books.Format = form.querySelector('input[name = "Format"]').value
+            console.log(JSON.stringify(Books))
+            return Books
+        }
+        function setBooksInRow(rowElement, Books){
+            Books.Author = rowElement.cells[0].firstChild.textContent = Books.Author
+            Books.Title = rowElement.cells[1].firstChild.textContent = Books.Title
+            Books.Genre = rowElement.cells[2].firstChild.textContent = Books.Genre
+            Books.Owned_By = rowElement.cells[3].firstChild.textContent = Books.Owned_By
+            Books.Format = rowElement.cells[4].firstChild.textContent = Books.Format
+        }
+        function doUpdate(){
+            var Books = getBooksFromForm();
+            var rowElement = document.getElementById(Books.Author);
+            setBookInRow(rowElement, Books);
+            
+            clearForm()
+            showViewAll()
+        }
+        function doDelete(r){
+            var tableElement = document.getElementById('bookTable');
+            var rowElement = r.parentNode.parentNode;
+            var index = rowElement.rowIndex;
+            deleteBookAjax(rowElement.getAttribute("id"));
+            tableElement.deleteRow(index);
+        }
+        function getAllAjax(){
+        $.ajax({
+            "url": "",
+            "method":"GET",
+            "data":"",
+            "dataType": "JSON",
+            "success":function(result){
+                //console.log(result);
+                for (Books of result){
+                    addBooksToTable(Books);
+                }
+                
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+    }
+    function createBooksAjax(Books){
+        console.log(JSON.stringify(Books));
+        $.ajax({
+            "url": "",
+            "method":"POST",
+            "data":JSON.stringify(Books),
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+            "success":function(result){
+                //console.log(result);
+                Books.id = result.id
+                addBooksToTable(Books)
+                clearForm()
+                showViewAll()
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+    }
+    function updateBooksAjax(Books){
+        //var car = {"reg":"12 D 1234","price":8000}
+        console.log(JSON.stringify(Books));
+        $.ajax({
+            "url": ""+encodeURI(Books.id),
+            "method":"PUT",
+            "data":JSON.stringify(Books),
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+            "success":function(result){
+               // console.log(result);
+                  
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+    }
+    function deleteBooksAjax(id){
+        
+        //console.log(JSON.stringify('deleting '+id));
+        $.ajax({
+            "url": ""+encodeURI(id),
+            "method":"DELETE",
+            "data":"",
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+            "success":function(result){
+                //console.log(result);
+                  
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+    }
+    getAllAjax();
+  
+    </script>
+</html>

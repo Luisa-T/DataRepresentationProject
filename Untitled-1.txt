@@ -1,0 +1,12 @@
+create table id int not null auto_increment
+author var char(250)
+title var char(250)
+genre varchar(50)
+owned by varchar(250)
+format varchar(50)
+primary key(id)
+pip install mysql-connector-python
+mkvitualenv -- python-/
+pip install -r requirements.txt
+cp dbconfigtemplate.py oldserver requirements.txtcp dbconfigtemplate.py dbconfig.py
+cat dbconfig.py
