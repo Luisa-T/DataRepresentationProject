@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>Library</h1>
-    <button onclick="createBooks">Create</button>
+    <button id="doCreate()" onclick = "doCreate()">Create</button>
     <h2>All Books</h2>
     <table border="3" cellpadding="5" cellspacing="0" align="center" class="table" id="BooksTable">
         <tr>
@@ -72,15 +72,6 @@
         </form>
     </div>
     <script>
-        function doCreate(){
-            document.getElementById('showCreateButton').style.display="none"
-            document.getElementById('BooksTable').style.display="none"
-            document.getElementById('createUpdateForm').style.display="block"
-            document.getElementById('createLabel').style.display="inline"
-            document.getElementById('updateLabel').style.display="none"
-            document.getElementById('doCreateButton').style.display="block"
-            document.getElementById('doUpdateButton').style.display="none"
-        }
         function showUpdate(){
             document.getElementById('showCreateButton').style.display="none"
             document.getElementById('bookTable').style.display="none"
@@ -136,9 +127,9 @@
             var cell1 = rowElement.insertCell(4);
             cell1.innerHTML = Books.Format
             var cell1 = rowElement.insertCell(5);
-            cell1.innerHTML = <button onclick =  "showUpdate(this)">Update</button>
+            cell1.innerHTML = <button id="showUpdate(this)" onclick = "showUpdate(this)">Update</button>
             var cell1 = rowElement.insertCell(6);
-            cell1.innerHTML = <button onclick =  "doDelete(this)">Delete</button>
+            cell1.innerHTML = <button id="doDelete(r)" onclick = "doDelete(r)">Delete</button>
         }
         function getBooksFromRow(rowElement){
             var Books = {}
