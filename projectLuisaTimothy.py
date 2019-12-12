@@ -1,3 +1,4 @@
+
 from flask import Flask, jsonify, request, abort
 import sqlalchemy
 from sqlalchemy import create_engine
@@ -17,20 +18,38 @@ class Books(Base):
         return "<Books(author='%s', Title='%s', Genre='%s', Owned_by='%s', Format='%s')>" % (self.Author, self.Title, self.Genre, self.Owned_by, self.Format)
 
 Base = declarative_base()
+class User(Base):
+    __tablename__ = 'Books'
 
-Books.__table__ 
-Table('Books', MetaData(bind=None), 
-    Column('id', Integer(), table=Books, primary_key=True, nullable=False),
-    Column('Author', String(), table=Books),
-    Column('Title', String(), table=Books),
-    Column('Genre', String(), table=Books),
-    Column('Owned_by', String(), table=Books),
-    Column('Format', String(), table=Books), schema=None)
+def __repr__(self):
+    return "<User(Author = '%s', Title = '%s', Genre = '%s', Owned by = '%s', Format '%s')>" % (self.Author, self.Title, self.Genre, self.Owned_by, self.Format)
+
+    Books.__table__ 
+    Table('Books', MetaData(bind=None), 
+        Column('id', Integer(), table=Books, primary_key=True, nullable=False),
+        Column('Author', String(50), table=Books),
+        Column('Title', String(250), table=Books),
+        Column('Genre', String(50), table=Books),
+        Column('Owned_by', String(50), table=Books),
+        Column('Format', String(50), table=Books), schema=None)
 
 Base.metadata.create_all(engine)
-SELECT 
+#stopped at page 30 of doc
+
 PRAGMA table_info("Books")
 ()
+CREATE TABLE Books (
+    id INTEGER NOT NULL,
+    Author VARCHAR,
+    Title VARCHAR,
+    Genre VARCHAR,
+    Owned_by VARCHAR,
+    Format  VARCHAR,
+    PRIMARY KEY (id)
+)
+()
+COMMIT
+
 PRAGMA temp.table_info("Books")
 ()
 CREATE TABLE Books (
