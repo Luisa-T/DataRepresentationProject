@@ -28,23 +28,23 @@ Table('Books', MetaData(bind=None),
     Column('Format', String(), table=Books), schema=None)
 
 Base.metadata.create_all(engine)
-#SELECT 
-#PRAGMA table_info("Books")
-#()
-#PRAGMA temp.table_info("Books")
-#()
-#CREATE TABLE Books (
-    #id INTEGER NOT NULL, name VARCHAR,
-    #Author VARCHAR,
-    #Title VARCHAR,
-    #Genre VARCHAR,
-    #Owned_by VARCHAR,
-    #Format VARCHAR,
-    #PRIMARY KEY (id)
-#)
-#()
-#COMMIT
-#)
+SELECT 
+PRAGMA table_info("Books")
+()
+PRAGMA temp.table_info("Books")
+()
+CREATE TABLE Books (
+    id INTEGER NOT NULL, name VARCHAR,
+    Author VARCHAR,
+    Title VARCHAR,
+    Genre VARCHAR,
+    Owned_by VARCHAR,
+    Format VARCHAR,
+    PRIMARY KEY (id)
+)
+()
+COMMIT
+)
 
 Session = sessionmaker()
 Session.configure(bind=engine)

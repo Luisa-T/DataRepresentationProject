@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>Library</h1>
-    <button id="doCreate()" onclick = "doCreate()">Create</button>
+    <button id="showCreateButton()" onclick = "showCreate()">Create</button>
     <h2>All Books</h2>
     <table border="3" cellpadding="5" cellspacing="0" align="center" class="table" id="BooksTable">
         <tr>
@@ -63,8 +63,8 @@
                 <option value="Audiobook">Audiobook</option>
                 <option value="Ebook">Ebook</option>
                 <option value="E-Audiobook">E-Audiobook</option>
-            <span><button id="showCreateButton" onclick="showCreate()">Create</button></span>
-            <span><button id="showUpdateButton" onclick="showUpdate(this)">Update</button></span>
+            <span><button id="doCreateButton" onclick="doCreate()">Create</button></span>
+            <span><button id="doUpdateButton" onclick="doUpdate(this)">Update</button></span>
             <span><button id="doCreateButton" onclick="doCreate()">Create</button></span>
             <span><button id="doUpdateButton" onclick="doUpdate()">Update</button></span>
             <div id="createUpdateForm" type="none"></div>
@@ -72,9 +72,9 @@
         </form>
     </div>
     <script>
-        function showUpdate(){
+        function showCreate(){
             document.getElementById('showCreateButton').style.display="none"
-            document.getElementById('bookTable').style.display="none"
+            document.getElementById('BooksTable').style.display="none"
             document.getElementById('createUpdateForm').style.display="block"
             document.getElementById('createLabel').style.display="none"
             document.getElementById('updateLabel').style.display="inline"
@@ -83,9 +83,22 @@
         }
         function showViewAll(){
             document.getElementById('showCreateButton').style.display="block"
-            document.getElementById('BooksTable').style.display="block"
+            document.getElementById('bookTable').style.display="block"
             document.getElementById('createUpdateForm').style.display="none"
         }
+        function showUpdate(buttonElement){
+            document.getElementById('showCreateButton').style.display="none"
+            document.getElementById('bookTable').style.display="none"
+            document.getElementById('createUpdateForm').style.display="block"
+            document.getElementById('createLabel').style.display="none"
+            document.getElementById('updateLabel').style.display="inline"
+            document.getElementById('doCreateButton').style.display="none"
+            document.getElementById('doUpdateButton').style.display="block"
+            
+            var rowElement = buttonElement.parentNode.parentNode
+        
+            var book = getBookFromRow(rowElement)
+            populateFormWithBook(Bsook)
         function clearForm(){
             var form = document.getElementById('createUpdateForm')
             form.querySelector('input[name="Author"]').disabled = false
@@ -95,22 +108,32 @@
             form.querySelector('input[name="Format"]').value = ''
         }
         function doCreate(){
-            document.getElementById('showCreateButton').style.display="none"
-            document.getElementById('BooksTable').style.display="none"
-            document.getElementById('createUpdateForm').style.display="block"
-            document.getElementById('createLabel').style.display="inline"
-            document.getElementById('updateLabel').style.display="none"
-            document.getElementById('doCreateButton').style.display="block"
-            document.getElementById('doUpdateButton').style.display="none"
-            clearForm()
-            showViewAll()
-            var Books = {}
-            Books.Author = form.querySelector('input[name="Author"]').value = ''
-            Books.Title = form.querySelector('input[name="Title"]').value = ''
-            Books.Genre = form.querySelector('input[name="Genre"]').value = ''
-            Books.Owned_By = form.querySelector('input[name="Owned By"]').value = ''
-            Books.Format = form.querySelector('input[name="Format"]').value = ''
+            var form = document.getElementById('createUpdateForm')
+            var book = {}
+            Books.Author = form.querySelector('input[name="Author"]').value
+            Books.Title = form.querySelector('input[name="Title"]').value
+            Books.Genre = form.querySelector('input[name="Genre"]').value
+            Books.Owned_By = form.querySelector('input[name="Owned By"]').value
+            Books.Format = form.querySelector('input[name="Format"]').value
+            console.log(JSON.stringify(Books))
+            createBooksAjax(Books)
         }
+    function doUpdate(){
+        var Books = getBooksFromForm();
+        var rowElement = document.getElementById(Books.id);
+        updateBooksAjax(Books);
+        setBooksInRow(rowElement,Books);
+       
+        clearForm();
+        showViewAll();
+    }
+    function doDelete(r){
+        var tableElement = document.getElementById('BooksTable');
+        var rowElement = r.parentNode.parentNode;
+        var index = rowElement.rowIndex;
+        deleteBooksAjax(rowElement.getAttribute("id"));
+        tableElement.deleteRow(index);
+    }
         function addBooksToTable(Books){
             rowElement.setAttribute('id', Books.Author)
             var tableElement = document.getElementById('BooksTable');
@@ -118,18 +141,18 @@
             rowElement.setAttribute('id', Books.id)
             var cell1 = rowElement.insertCell(0);
             cell1.innerHTML = Books.Author
-            var cell1 = rowElement.insertCell(1);
-            cell1.innerHTML = Books.Title                    
-            var cell1 = rowElement.insertCell(2);
-            cell1.innerHTML = Books.Genre
-            var cell1 = rowElement.insertCell(3);
-            cell1.innerHTML = Books.Owned_By
-            var cell1 = rowElement.insertCell(4);
-            cell1.innerHTML = Books.Format
-            var cell1 = rowElement.insertCell(5);
-            cell1.innerHTML = <button id="showUpdate(this)" onclick = "showUpdate(this)">Update</button>
-            var cell1 = rowElement.insertCell(6);
-            cell1.innerHTML = <button id="doDelete(r)" onclick = "doDelete(r)">Delete</button>
+            var cell2 = rowElement.insertCell(1);
+            cell2.innerHTML = Books.Title                    
+            var cell3 = rowElement.insertCell(2);
+            cell3.innerHTML = Books.Genre
+            var cell4 = rowElement.insertCell(3);
+            cell4.innerHTML = Books.Owned_By
+            var cell5 = rowElement.insertCell(4);
+            cell5.innerHTML = Books.Format
+            var cell6 = rowElement.insertCell(5);
+            cell6.innerHTML = <button id="showUpdate(this)" onclick = "showUpdate(this)">Update</button>
+            var cell7 = rowElement.insertCell(6);
+            cell7.innerHTML = <button id="doDelete(r)" onclick = "doDelete(r)">Delete</button>
         }
         function getBooksFromRow(rowElement){
             var Books = {}
@@ -139,6 +162,14 @@
             Books.Owned_By = rowElement.cells[3].firstChild.textContent
             Books.Format = rowElement.cells[4].firstChild.textContent
             return Books
+        }
+        function setBooksInRow(rowElement, Books){
+            rowElement.cells[0].firstChild.textContent= Books.id  
+            rowElement.cells[1].firstChild.textContent= Books.Author 
+            rowElement.cells[2].firstChild.textContent= Books.Title        
+            rowElement.cells[3].firstChild.textContent= Books.Genre
+            rowElement.cells[4].firstChild.textContent= Books.Owned_by
+            rowElement.cells[5].firstChild.textContent= Books.Format
         }
         function populateFormWithBooks(Books){
             var form = document.getElementById('createUpdateForm')
@@ -177,21 +208,29 @@
             Books.Owned_By = rowElement.cells[3].firstChild.textContent = Books.Owned_By
             Books.Format = rowElement.cells[4].firstChild.textContent = Books.Format
         }
-        function doUpdate(){
-            var Books = getBooksFromForm();
-            var rowElement = document.getElementById(Books.Author);
-            setBookInRow(rowElement, Books);
-            
-            clearForm()
-            showViewAll()
-        }
-        function doDelete(r){
-            var tableElement = document.getElementById('bookTable');
-            var rowElement = r.parentNode.parentNode;
-            var index = rowElement.rowIndex;
-            deleteBookAjax(rowElement.getAttribute("id"));
-            tableElement.deleteRow(index);
-        }
+        function populateFormWithBooks(Books){
+        var form = document.getElementById('createUpdateForm')
+        form.querySelector('input[name="id"]').disabled = true
+        form.querySelector('input[name="id"]').value  = Books.id
+        form.querySelector('input[name="Author"]').value= Books.Author
+        form.querySelector('input[name="Title"]').value= Books.Title
+        form.querySelector('input[name="Genre"]').value= Books.Genre
+        form.querySelector('input[name="Owned by"]').value= Books.Owned_by
+        form.querySelector('input[name="Format"]').value= Books.Format
+        return Books
+    }
+    function getBooksFromForm(){
+        var form = document.getElementById('createUpdateForm')
+        var Books = {}
+        Books.id = form.querySelector('input[name="id"]').value
+        Books.Author = form.querySelector('input[name="Author"]').value
+        Books.Title = form.querySelector('input[name="Title"]').value
+        Books.Genre = form.querySelector('input[name="Genre"]').value
+        Books.Owned_by = form.querySelector('input[name="Owned by"]').value
+        Books.Format = form.querySelector('input[name="Format"]').value
+        console.log(JSON.stringify(Books))
+        return Books
+    }
         function getAllAjax(){
         $.ajax({
             "url": "",
@@ -267,6 +306,6 @@
         });
     }
     getAllAjax();
-  
+    }
     </script>
 </html>
