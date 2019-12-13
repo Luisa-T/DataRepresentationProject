@@ -1,10 +1,15 @@
-
 from flask import Flask, jsonify, request, abort
+import sqlite3
 import sqlalchemy
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Column, Integer, String, Sequence, ForeignKey, text
 engine = create_engine('sqlite:///:memory:', echo=True)
-from sqlalchemy.ext.declarative import declarative_base, Column, Integer, String, Sequence, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship, backref
+from sqlalchemy.sql.schema import MetaData, Table
+from sqlalchemy.util._collections import IdentitySet
+from sqlalchemy.ext.declarative import declarative_base
 
+# defining the class Books for SQLAlchemy
 class Books(Base):
     __tablename__ = 'Books'
     id = Column(Integer, Sequence('Book_id_seq'), primary_key=True)
@@ -14,16 +19,13 @@ class Books(Base):
     Owned_by = Column(String)
     Format = Column(String)
 
-    def __repr__(self):
-        return "<Books(author='%s', Title='%s', Genre='%s', Owned_by='%s', Format='%s')>" % (self.Author, self.Title, self.Genre, self.Owned_by, self.Format)
-
 Base = declarative_base()
-class User(Base):
-    __tablename__ = 'Books'
+metadata = MetaData()
 
 def __repr__(self):
-    return "<User(Author = '%s', Title = '%s', Genre = '%s', Owned by = '%s', Format '%s')>" % (self.Author, self.Title, self.Genre, self.Owned_by, self.Format)
+    return "<Books(Author = '%s', Title = '%s', Genre = '%s', Owned by = '%s', Format '%s')>" % (self.Author, self.Title, self.Genre, self.Owned_by, self.Format)
 
+    # Defining the books table, columns, primary key etc.
     Books.__table__ 
     Table('Books', MetaData(bind=None), 
         Column('id', Integer(), table=Books, primary_key=True, nullable=False),
@@ -33,47 +35,23 @@ def __repr__(self):
         Column('Owned_by', String(50), table=Books),
         Column('Format', String(50), table=Books), schema=None)
 
+# Create the session
 Base.metadata.create_all(engine)
 #stopped at page 30 of doc
 
-PRAGMA table_info("Books")
-()
-CREATE TABLE Books (
-    id INTEGER NOT NULL,
-    Author VARCHAR,
-    Title VARCHAR,
-    Genre VARCHAR,
-    Owned_by VARCHAR,
-    Format  VARCHAR,
-    PRIMARY KEY (id)
-)
-()
-COMMIT
+# Create the table
+metadata.create_all(engine)
 
-PRAGMA temp.table_info("Books")
-()
-CREATE TABLE Books (
-    id INTEGER NOT NULL, name VARCHAR,
-    Author VARCHAR,
-    Title VARCHAR,
-    Genre VARCHAR,
-    Owned_by VARCHAR,
-    Format VARCHAR,
-    PRIMARY KEY (id)
-)
-()
-COMMIT
-)
 
 Session = sessionmaker()
 Session.configure(bind=engine)
 session = Session()
 
 
-
+# Flask server
 app= Flask(__name__, static_url_path='', static_folder='.')
 
-#create many
+# Create many with SQLAlllchemy
 session.add_all(Books=[{"id":1, " Author": "Moshin Hamid", "Title": "Moth Smoke", "Genre": "Contemporary Fiction", "Owned by": "yourself", "Format": "Paperback"},
 {"id":2, " Author": "Andrea Camilleri", "Title": "Blade of Light", "Genre": "Crime", "Owned by": "yourself", "Format": "Paperback"},
 {"id":3, " Author": "Margaret Atwood", "Title": "Hag-Seed", "Genre": "Contemporary Fiction", "Owned by":"Library", "Format": "Hardback"},
@@ -97,17 +75,19 @@ session.add_all(Books=[{"id":1, " Author": "Moshin Hamid", "Title": "Moth Smoke"
 {"id":21, " Author": "Richard Shepherd", "Title": "Unnatural Causes", "Genre": "Non-Fiction", "Owned by": "Yourself", "Format": "Hardback"}])
 
 session.commit()
-# create one
+
+# Create one
 JP_Book = Books(Author='James Patterson', Title='Kiss The Girls', Genre='Crime', Owned_by='Yourself', Format='Paperback')
 session.add(JP_Book)
 
-# select one
+# Select one
 session.query(Books).filter(Books.Author.in_(['James Patterson', 'Kiss the Girls', 'Crime', 'Yourself', 'Paperback'])).all()
 [Books(Author='James Patterson', Title='Kiss The Girls', Genre='Crime', Owned_by='Yourself', Format='Paperback')]
 
 for instance in session.query(Books).order_by(Books.id):
     print()
-# another example of select one
+
+# Another example of select one
 for Books in session.query(Books).\
         filter(Books.Author=='Andrea Camilleri').\
         filter(Books.Title=='Blade of Light'):
@@ -116,28 +96,34 @@ for Books in session.query(Books).\
 session.query(Books).from_statement(
     text("SELECT * FROM users where name=:name")).\
     params(name='ed').all()
-# update
+
+# Update
 session.dirty
 IdentitySet([Books(Author='James Patterson', Title='Kiss The Girls', Genre='Crime', Owned_by='Yourself', Format='Paperback')])
 
-#delete
+# Delete
 session.delete('James Patterson')
 session.query(Books).filter_by(Author='James Patterson').count()
+d = Books.delete().where(Books.Author == ('James Patterson'))
+d.execute
 
+# Defining nextID as a global variable
 global nextID
 nextID = 0
+
+# Display all
 @app.route('/books')
 def getAll():
     return "In you current library" + str(id)
 
-
+# Create
 @app.route()
 def createBook(id):
     if not request.json:
         abort(400)
+    # Checking if the book already exists in the table
     if Books (filter(lambda t: t['Author' == 'Author']) and (lambda t: t['Title'] == 'Title')):
         return jsonify("You already have this one ") + Books
-    #other checking, duplicate checking
     book = {
         "id": nextID,
         "Author": request.json['Author'],
@@ -150,6 +136,7 @@ def createBook(id):
     Books.append(book)
     return jsonify(book)
 
+# Find one
 @app.route('/books', methods=['POST'])
 def findBooks(id):
     foundBooks = list(filter(lambda t: t['id'] == id, Books))
@@ -158,7 +145,7 @@ def findBooks(id):
     else:
         return jsonify(foundBooks[0]) + str(id)
 
-
+# Update
 @app.route('/books/<int:id>', methods=['UPDATE'])
 def updateBook(id):
     foundBooks = list(filter(lambda t: t['id'] == id, Books))
@@ -181,6 +168,7 @@ def updateBook(id):
         foundBooks['Format'] = reqJson['Format']
     return "you want to get the book with " + str(id)
 
+# Delete
 @app.route('/book/<int:id>', methods=['DELETE'])
 def deleteBook(id):
     return "you want to get the book with " + str(id)
@@ -190,5 +178,6 @@ def deleteBook(id):
     Books.remove(foundBooks[0])
     return jsonify({"complete":True})
 
+# Main method
 if __name__ == '__main__' :
     app.run(debug=True)

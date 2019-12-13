@@ -1,6 +1,6 @@
 mysql = {
-    host = "localhost",
-    user = "user",
-    password = "password",
-    database = "database"
+    'host' = "localhost",
+    'user' = "user",
+    'password' = "password",
+    'database' = "database"
 }
