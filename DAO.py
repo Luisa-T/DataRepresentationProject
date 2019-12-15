@@ -1,30 +1,32 @@
+# Importing the necessary packages
 import mysql.connector
-import config as cfg
+#import config as cfg
 
+# Python anywhere database I created
 class DAO():
     db=""
     def __init__(self): 
         self.db = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="",
-        #user="datarep",  # this is the user name on my mac
-        #passwd="password" # for my mac
-        database="datarepresentation"
+        host="LuTi.mysql.pythonanywhere-services.com",
+        user="LuTi",
+        password="D@t@rep19",
+        database="LuTi$Library"
         )
 
-    db = mysql.connector.connect(
-        host = cfg.mysql['host'],
-        user = cfg.mysql['user'],
-        password = cfg.mysql['password'],
-        database = cfg.mysql['database']
-    )
-    #set FLASK_ENV=development
+    # Defining how to connect to the database
+    #db = mysql.connector.connect(
+     #   host = cfg.mysql['host'],
+      #  user = cfg.mysql['user'],
+       # password = cfg.mysql['password'],
+        #database = cfg.mysql['database']
+    #)
+    
 
-    cursor = db.cursor()
+    #cursor = db.cursor()
 
-    cursor.execute("CREATE DATABASE LibraryProject")
+    #cursor.execute("CREATE DATABASE LibraryProject")
 
+    # Create a new entry into the database
     def create(self, values):
         cursor = self.db.cursor()
         sql = "INSERT INTO Books(Author, Title, Genre, Owned_by, format) values (%s, %s, %s, %s, %s)"
@@ -35,6 +37,7 @@ class DAO():
         self.db.commit()
         print("x record inserted", cursor.lastrowid)
 
+    # Show all entries in the database
     def displayAll(self):
         cursor = self.db.cursor()
         sql="select * from Books"
@@ -49,6 +52,7 @@ class DAO():
 
         return returnArray
 
+    # Find a book by the ID assigned to it
     def findByID(self, id):
         cursor = self.db.cursor()
         sql="select * from book where id = %s"
@@ -58,6 +62,7 @@ class DAO():
         result = cursor.fetchone()
         return self.convertToDictionary(result)
 
+    # Update an existing entry
     def update(self, values):
         cursor = self.db.cursor()
         sql="update Books set Author = %s, Title = %s, Genre = %s, Owned_by = %s, Format = %s, where id = %s"
@@ -68,6 +73,7 @@ class DAO():
         self.db.commit()
         print("update done")
 
+    # Deleting an entry
     def delete(self, id):
         cursor = self.db.cursor()
         sql="delete from Books where id = %s"
@@ -78,6 +84,7 @@ class DAO():
         self.db.commit()
         print("delete complete")
 
+    # This ensures that a new entry is added to the dictionary and is added to the database
     def convertToDictionary(self, result):
         colnames=['id', 'Author', 'Title','Genre', 'Owned by', 'Format']
         item = {}
@@ -89,4 +96,4 @@ class DAO():
             
         return item
             
-    DAO = DAO()
+    #DAO = DAO()

@@ -1,12 +1,15 @@
 <html>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <head>
     <title>Library Luisa Timothy</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<body>
+<d/div>
     <h1>Library</h1>
-    <button id="showCreateButton()" onclick = "showCreate()">Create</button>
+    <div><button id="showCreateButton()" onclick="showCreate()">Create</button></div>
     <h2>All Books</h2>
+    <div>
     <table border="3" cellpadding="5" cellspacing="0" align="center" class="table" id="BooksTable">
         <tr>
             <th>Author</th>
@@ -14,6 +17,8 @@
             <th>Genre</th>
             <th>Owned by</th>
             <th>Format</th>
+            <th>Update</th>
+            <th>Delete</th>
         </tr>
         <tr id="1">
             <td>Fred Vargas</td>
@@ -21,8 +26,8 @@
             <td>Crime</td>
             <td>Yourself</td>
             <td>Hardback</td>
-            <td><button id="doUpdateButton">Update</button></td>
-            <td><button id="doDeleteButton">Delete</button></td>
+            <td><button id="doUpdateButton" onclick="doUpdate()">Update</button></td>
+            <td><button id="doDeleteButton" onclick="doDelete(r)">Delete</button></td>
         </tr>
             <tr id="2">
             <td>Umberto Eco</td>
@@ -30,8 +35,8 @@
             <td>Contemporary Fiction</td>
             <td>Yourself</td>
             <td>Hardback</td>
-            <td><button id="doUpdateButton">Update</button></td>
-            <td><button id="doDeleteButton">Delete</button></td>
+            <td><button id="doUpdateButton" onclick="doUpdate()">Update</button></td>
+            <td><button id="doDeleteButton" onclick="doDelete(r)">Delete</button></td>
         </tr>
         <tr id="3">
             <td>Steve Cavanagh</td>
@@ -39,10 +44,11 @@
             <td>Crime</td>
             <td>Yourself</td>
             <td>Paperback</td>
-            <td><button id="doUpdateButton">Update</button></td>
-            <td><button id="doDeleteButton">Delete</button></td>
+            <td><button id="doUpdateButton" onclick="doUpdate()">Update</button></td>
+            <td><button id="doDeleteButton" onclick="doDelete(r)">Delete</button></td>
         </tr>
     </table>
+    </div>
     <div id="createUpdateForm" style="display: none">
         <form hidden>
             <h2><span id="createLabel">Create a</span><span id="updateLabel">Update this</span>Book</h2>
@@ -66,11 +72,12 @@
             <span><button id="doCreateButton" onclick="doCreate()">Create</button></span>
             <span><button id="doUpdateButton" onclick="doUpdate(this)">Update</button></span>
             <span><button id="doCreateButton" onclick="doCreate()">Create</button></span>
-            <span><button id="doUpdateButton" onclick="doUpdate()">Update</button></span>
+            <span><button id="doUpdateButton" onclick="doUpdate(this)">Update</button></span>
             <div id="createUpdateForm" type="none"></div>
             <button id="showCreateButton" onclick="showCreate()"></button>
         </form>
     </div>
+</body>
     <script>
         function showCreate(){
             document.getElementById('showCreateButton').style.display="none"
@@ -97,8 +104,9 @@
             
             var rowElement = buttonElement.parentNode.parentNode
         
-            var book = getBookFromRow(rowElement)
-            populateFormWithBook(Bsook)
+            var Books = getBookFromRow(rowElement)
+            populateFormWithBook(Books)
+        }
         function clearForm(){
             var form = document.getElementById('createUpdateForm')
             form.querySelector('input[name="Author"]').disabled = false
@@ -117,19 +125,21 @@
             Books.Format = form.querySelector('input[name="Format"]').value
             console.log(JSON.stringify(Books))
             createBooksAjax(Books)
+            clearForm()
+            showViewAll()
         }
     function doUpdate(){
-        var Books = getBooksFromForm();
-        var rowElement = document.getElementById(Books.id);
-        updateBooksAjax(Books);
-        setBooksInRow(rowElement,Books);
+        var Books = getBooksFromForm()
+        var rowElement = document.getElementById(Books.id)
+        updateBooksAjax(Books)
+        setBooksInRow(rowElement,Books)
        
-        clearForm();
-        showViewAll();
+        clearForm()
+        showViewAll()
     }
     function doDelete(r){
         var tableElement = document.getElementById('BooksTable');
-        var rowElement = r.parentNode.parentNode;
+        var rowElement = r.parentNode.parentNode.rowIndex;
         var index = rowElement.rowIndex;
         deleteBooksAjax(rowElement.getAttribute("id"));
         tableElement.deleteRow(index);
@@ -150,9 +160,9 @@
             var cell5 = rowElement.insertCell(4);
             cell5.innerHTML = Books.Format
             var cell6 = rowElement.insertCell(5);
-            cell6.innerHTML = <button id="showUpdate(this)" onclick = "showUpdate(this)">Update</button>
+            cell6.innerHTML = '<button id="showUpdate(this)" onclick = "showUpdate(this)">Update</button>'
             var cell7 = rowElement.insertCell(6);
-            cell7.innerHTML = <button id="doDelete(r)" onclick = "doDelete(r)">Delete</button>
+            cell7.innerHTML = '<button id="doDelete(r)" onclick = "doDelete(r)">Delete</button>'
         }
         function getBooksFromRow(rowElement){
             var Books = {}
@@ -180,15 +190,6 @@
             form.querySelector('input[name="Genre"]').value = Books.Genre
             form.querySelector('input[name="Owned By"]').value = Books.Owned_by
             form.querySelector('input[name="Format"]').value = Books.Format
-        }
-        function doUpdate(){
-            var Books = getBooksFromForm();
-            var rowElement = document.getElementById(Books.id);
-            updateBookAjax(Books);
-            setBookInRow(rowElement,Books);
-        
-            clearForm();
-            showViewAll();
         }
         function getBookFromForm(){
             var form = getElementById('createUpdateForm')
@@ -306,6 +307,5 @@
         });
     }
     getAllAjax();
-    }
     </script>
 </html>
