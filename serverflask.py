@@ -1,73 +1,80 @@
-from flask import Flask
+from flask import Flask, jsonify, request, abort, make_response
+from flask_cors import CORS
 from DAO import DAO
 
-app= Flask(_name_, static_url_path='', static_folder='.')
-
-
-@app.route('/Books')
-def getAll():
-    results = DAO.getAll()
-    return jsonify(results)
-
-#curl "http://127.0.0.1:5000/books/2"
-@app.route('/Books/<int:id>')
-def findById(id):
-    foundBooks = DAO.findByID(id)
-
-    return jsonify(foundBooks)
-
-#curl  -i -H "Content-Type:application/json" -X POST -d "{\"Title\":\"hello\",\"Author\":\"someone\",\"Price\":123}" http://127.0.0.1:5000/books
-@app.route('/Books', methods=['POST'])
-def create():
-    
+app = Flask(__name__, static_url_path='', static_folder='.')
+Books = []
+nextID = id + 1
+# Create
+@app.route()
+def createBooks():
     if not request.json:
         abort(400)
-    # other checking 
+    # Checking if the book already exists in the table
+    if Books (filter(lambda t: t['Author' == 'Author']) and (lambda t: t['Title'] == 'Title')):
+        return jsonify("You already have this one ") + Books
     Books = {
+        "id": nextID,
         "Author": request.json['Author'],
         "Title": request.json['Title'],
         "Genre": request.json['Genre'],
-        "Owned by": request.json['Owned by'],
-        "Format": request.json['Format'],
+        "Owned_by": request.json['Owned_by'],
+        "Format": request.json['Format']
     }
-    values =(Books['Author'], Books['Title'], Books['Genre'], Books['Owned by'], Books['Format'])
-    newId = DAO.create(values)
-    Books['id'] = newId
+    nextID +=1
+    Books.append(Books)
     return jsonify(Books)
 
-#curl  -i -H "Content-Type:application/json" -X PUT -d "{\"Title\":\"hello\",\"Author\":\"someone\",\"Price\":123}" http://127.0.0.1:5000/books/1
-@app.route('/books/<int:id>', methods=['PUT'])
-def update(id):
-    foundBooks = DAO.findByID(id)
-    if not foundBooks:
+# Find one
+@app.route('/Books', methods=['POST'])
+def findBooks(Author):
+    foundBooks = list(filter(lambda t: t['Author'] == Author, Books))
+    if len(foundBooks) == 0:
+        return jsonify({}), 204
+    else:
+        return jsonify(foundBooks[0]) + str(id)
+
+# Update
+@app.route('/books/<int:id>', methods=['UPDATE'])
+def updateBook(id):
+    foundBooks = list(filter(lambda t: t['id'] == id, Books))
+    if(len(foundBooks) == 0):
         abort(404)
-    
+    foundBooks = foundBooks[0]
     if not request.json:
         abort(400)
-    reqJson = request.json
-    if 'Price' in reqJson and type(reqJson['Price']) is not int:
+    else:
+        reqJson = request.json
+    if 'Author' in reqJson and type(reqJson['Author']) is not str:
         abort(400)
-
     if 'Title' in reqJson:
-        foundBook['Title'] = reqJson['Title']
-    if 'Author' in reqJson:
-        foundBook['Author'] = reqJson['Author']
-    if 'Price' in reqJson:
-        foundBook['Price'] = reqJson['Price']
-    values = (foundBook['Title'],foundBook['Author'],foundBook['Price'],foundBook['id'])
-    bookDAO.update(values)
-    return jsonify(foundBook)
-        
+        foundBooks['Title'] = reqJson['Title']
+    if 'Genre' in reqJson:
+        foundBooks['Genre'] = reqJson['Genre']
+    if 'Owned by' in reqJson:
+        foundBooks['Owned by'] = reqJson['Owned by']
+    if 'Format' in reqJson:
+        foundBooks['Format'] = reqJson['Format']
+    return "Do you want to get the book with " + str(id)
 
-    
+# Delete
+@app.route('/book/<int:id>', methods=['DELETE'])
+def deleteBook(Author):
+    return "you want to get the book with " + str(Author)
+    foundBooks = list(filter(lambda t: t['Author'] == Author, Books))
+    if(len(foundBooks) == 0):
+        abort(404)
+    Books.remove(foundBooks[0])
+    return jsonify({"complete":True})
 
-@app.route('/books/<int:id>' , methods=['DELETE'])
-def delete(id):
-    bookDAO.delete(id)
-    return jsonify({"done":True})
 
+@app.errorhandler(404)
+def not_found404(error):
+    return make_response( jsonify( {'error':'Not found' }), 404)
 
-
+@app.errorhandler(400)
+def not_found400(error):
+    return make_response( jsonify( {'error':'Bad Request' }), 400)
 
 if __name__ == '__main__' :
     app.run(debug= True)

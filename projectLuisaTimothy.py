@@ -1,5 +1,7 @@
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, make_response
+from flask_cors import CORS
 import sqlite3
+import mysql.connector
 import sqlalchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence, ForeignKey, text
 engine = create_engine('sqlite:///:memory:', echo=True)
@@ -37,7 +39,6 @@ def __repr__(self):
 
 # Create the session
 Base.metadata.create_all(engine)
-#stopped at page 30 of doc
 
 # Create the table
 metadata.create_all(engine)
@@ -177,6 +178,14 @@ def deleteBook(id):
         abort(404)
     Books.remove(foundBooks[0])
     return jsonify({"complete":True})
+
+@app.errorhandler(404)
+def not_found404(error):
+    return make_response( jsonify( {'error':'Not found' }), 404)
+
+@app.errorhandler(400)
+def not_found400(error):
+    return make_response( jsonify( {'error':'Bad Request' }), 400)
 
 # Main method
 if __name__ == '__main__' :

@@ -22,9 +22,9 @@ class DAO():
     #)
     
 
-    #cursor = db.cursor()
+    cursor = db.cursor()
 
-    #cursor.execute("CREATE DATABASE LibraryProject")
+    cursor.execute("CREATE DATABASE LibraryProject")
 
     # Create a new entry into the database
     def create(self, values):
@@ -35,7 +35,7 @@ class DAO():
         cursor.execute(sql, values)
 
         self.db.commit()
-        print("x record inserted", cursor.lastrowid)
+        print("Record inserted", cursor.lastrowid)
 
     # Show all entries in the database
     def displayAll(self):
@@ -96,4 +96,4 @@ class DAO():
             
         return item
             
-    #DAO = DAO()
+    DAO = DAO()
