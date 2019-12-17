@@ -8,6 +8,7 @@ nextID = id + 1
 # Create
 @app.route()
 def createBooks():
+    Books = []
     if not request.json:
         abort(400)
     # Checking if the book already exists in the table

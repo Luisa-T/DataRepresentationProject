@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, abort, make_response
+from flask import Flask, jsonify, session, request, abort, make_response, app, url_for, redirect
 from flask_cors import CORS
 import sqlite3
 import mysql.connector
@@ -10,7 +10,58 @@ from sqlalchemy.orm import sessionmaker, relationship, backref
 from sqlalchemy.sql.schema import MetaData, Table
 from sqlalchemy.util._collections import IdentitySet
 from sqlalchemy.ext.declarative import declarative_base
+from flask.templating import render_template
 
+CORS(app)
+# Storing sessions
+app = Flask(__name__)
+app.secret_key = 'Booknerd'
+
+@app.route("/")
+def index():
+    count = 0
+    count+=1
+
+    if not 'counter' in session:
+        session['counter'] = 0
+        print("Welcome")
+    
+    sessionCount = session['counter']
+    sessionCount += 1
+    session['counter'] = sessionCount
+# redirect the user to the login page
+username = 'booknerd'
+password ='Lily2019'
+@app.route('/', methods['GET', 'POST'])
+def home():
+    if not username in session:
+        return redirect(url_for('login'))
+    
+    return 'Welcome ' + session['username'] +\
+        '<br><a href="' + url_for('logout') + '">logout</a>'
+# Login button
+@app.route('/login')
+def login():
+    return '<h1>login</h1> ' +\
+        '<button>' +\
+            '<a href="' + url_for('process_login') + '">' +\
+                'login' +\
+            '</a>' +\
+        '</button>'
+# Checking credentials
+@app.route('processlogin')
+def process_login():
+    error = None
+    if request.method == 'POST':
+        if request.form['inputEmail'] != app.config['USERNAME']:
+            error = 'Invalid username'
+        elif request.POST['inputPassword'] != app.config['PASSWORD']:
+            error = 'Invalid password'
+        else:
+            session['logged_in'] = True
+            return redirect(url_for('/books'))
+
+    return render_template('index.html', error=error)
 # defining the class Books for SQLAlchemy
 class Books(Base):
     __tablename__ = 'Books'

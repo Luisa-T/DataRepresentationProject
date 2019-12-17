@@ -10,7 +10,7 @@
     <body>
     <div>
         <h1>Library</h1>
-        <div><button id="showCreateButton()" onclick="showCreate()">Create</button></div>
+        <div><button id="showCreateButton" onclick="showCreate()">Create</button></div>
         <h2>All Books</h2>
         <div>
         <table border="3" cellpadding="5" cellspacing="0" align="center" class="table" id="BooksTable">
@@ -83,13 +83,14 @@
     </div>
     </body>
     <script>
+        // I am getting an error when trying to create a new book
+        // The below should load the content in the browser and avoid the error
+        document.addEventListener("DOMContentLoaded", function(event) {     
+        document.querySelector('#showCreateButton').addEventListener("click",myFunction);
+        function myFunction(){
+          return showCreate();
+        }
         function showCreate(){
-            //var rowElement = document.getElementById(Books.id);
-            //if(typeof rowElement == 'undefined' && rowElement == null){
-                //print('No value' + rowElement)
-            //}else{
-                //rowElement.innerHTML = value;
-            //}
             document.getElementById('showCreateButton').style.display="none"
             document.getElementById('BooksTable').style.display="none"
             document.getElementById('createUpdateForm').style.display="block"
@@ -216,7 +217,7 @@
         }
         function getAllAjax(){
         $.ajax({
-            "url": "",
+            "url":"",
             "method":"GET",
             "data":"",
             "dataType": "JSON",
@@ -228,14 +229,14 @@
                 
             },
             "error":function(xhr,status,error){
-                console.log("error: "+status+" msg:"+error);
+                console.log("error:"+status+"msg:"+error);
         }
         });
     }
     function createBooksAjax(Books){
         console.log(JSON.stringify(Books));
         $.ajax({
-            "url": "",
+            "url":"",
             "method":"POST",
             "data":JSON.stringify(Books),
             "dataType": "JSON",
@@ -248,7 +249,7 @@
                 showViewAll()
             },
             "error":function(xhr,status,error){
-                console.log("error: "+status+" msg:"+error);
+                console.log("error:"+status+"msg:"+error);
             }
         });
     }
@@ -269,7 +270,7 @@
             var cell6 = rowElement.insertCell(4);
             cell6.innerHTML = '<button onclick="showUpdate(this)">Update</button>'
             var cell7 = rowElement.insertCell(5);
-            cell7.innerHTML = '<button onclick=doDelete(this)>delete</button>'
+            cell7.innerHTML = '<button onclick="doDelete(this)">delete</button>'
     }
     function updateBooksAjax(){
         var Books = {}
@@ -308,5 +309,6 @@
         });
     }
     getAllAjax();
+    })
     </script>
 </html>
