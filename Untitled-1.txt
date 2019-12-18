@@ -6,7 +6,7 @@ owned by varchar(250)
 format varchar(50)
 primary key(id)
 pip install mysql-connector-python
-mkvitualenv -- python-/
+mkvitualenv usr/bin/ --python3.7- venv
 pip install -r requirements.txt
 cp dbconfigtemplate.py oldserver requirements.txtcp dbconfigtemplate.py dbconfig.py
 cat dbconfig.py
