@@ -33,7 +33,7 @@ class DAO():
         self.connectToDB()
     # Defining how to connect to the database
     db = mysql.connector.connect(
-        host = cfg.mysql['host'],
+        host = cfg.mysql['localhost'],
         user = cfg.mysql['user'],
         password = cfg.mysql['password'],
         database = cfg.mysql['database'],
