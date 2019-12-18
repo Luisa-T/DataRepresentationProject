@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, session, request, abort, make_response, app, url_for, redirect
+from flask import Flask, jsonify, session, request, models, abort, make_response, app, url_for, redirect
 from flask_cors import CORS
 import sqlite3
 import mysql.connector
@@ -11,12 +11,24 @@ from sqlalchemy.sql.schema import MetaData, Table
 from sqlalchemy.util._collections import IdentitySet
 from sqlalchemy.ext.declarative import declarative_base
 from flask.templating import render_template
+from sqlalchemy.testing.config import db
 
 CORS(app)
 # Storing sessions
 app = Flask(__name__)
 app.secret_key = 'Booknerd'
 
+def before_request():
+  """Connect to the database before each request"""
+  db=models.DATABASE
+  db.connect()
+
+
+@app.after_request
+def after_request(response):
+  """Close the databse connection after each request"""
+  db.close()
+  return response
 @app.route("/")
 def index():
     count = 0
