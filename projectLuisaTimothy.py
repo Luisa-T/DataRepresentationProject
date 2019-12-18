@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, session, request, abort, make_response, app, url_for, redirect
+from flask import Flask, jsonify, session, request, abort, make_response, app, url_for, redirect, flash, render_template, g
 from flask_cors import CORS
 import sqlite3
 import mysql.connector
@@ -21,14 +21,14 @@ app.secret_key = 'Booknerd'
 
 def before_request():
   """Connect to the database before each request"""
-  db=models.DATABASE
-  db.connect()
+  g.db=models.DATABASE
+  g.db.connect()
 
 
 @app.after_request
 def after_request(response):
   """Close the databse connection after each request"""
-  db.close()
+  g.db.close()
   return response
 @app.route("/")
 def index():
