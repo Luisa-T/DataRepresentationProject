@@ -1,6 +1,6 @@
 # DataRepresentationProject
 
-This file gives a summary of the project and the files written for it. It also contains instructions on how to run these files
+This file gives a summary of the project and the files written for it. It also contains instructions on how to run these files. The files contain comments explaining the code.
 
 ## 1. LibraryLuisaTimothy.html
 This is the Browser interface for the project. Basic CRUD operations are within Using the DOM and Javascript, as well as Ajax at the bottom of the file.
@@ -14,9 +14,8 @@ I have split up the CRUD operations in SQL into different files as well which ar
 #### 3.1 insert.py
 #### 3.2 displayAll.py
 #### 3.3 updating.py
-#### 3.4 update.py
-#### 3.5 updateDelete.py
-#### 3.6 delete.py
+#### 3.4 updateDelete.py
+#### 3.5 delete.py
 
 
 ## 4. projectLuisaTimothy.py
@@ -41,6 +40,4 @@ curl -i -H "Content-Type:application/json" -X POST - d '{"Author": "Agatha Chris
 curl -i -H "Content-Type:application/json" -X PUT - d '{"Format":"Audiobook"}' http://localhost:5000/Books/Agatha%Christie
 
 #### 6.5 Delete
-curl -i -X DELETE http://localhost:500/Books/Steve%Cavanagh
-
-
+curl -i -X DELETE http://localhost:5000/Books/Steve%Cavanagh

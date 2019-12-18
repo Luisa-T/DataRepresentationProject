@@ -68,7 +68,7 @@ def deleteBook(Author):
     Books.remove(foundBooks[0])
     return jsonify({"complete":True})
 
-
+# Handling errors
 @app.errorhandler(404)
 def not_found404(error):
     return make_response( jsonify( {'error':'Not found' }), 404)
@@ -76,6 +76,7 @@ def not_found404(error):
 @app.errorhandler(400)
 def not_found400(error):
     return make_response( jsonify( {'error':'Bad Request' }), 400)
+
 
 if __name__ == '__main__' :
     app.run(debug= True)

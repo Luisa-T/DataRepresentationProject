@@ -19,6 +19,8 @@ CORS(app)
 app = Flask(__name__)
 app.secret_key = 'Booknerd'
 
+# defining before and after request
+@app.before_request
 def before_request():
   """Connect to the database before each request"""
   g.db=models.DATABASE
@@ -52,6 +54,7 @@ def home():
     
     return 'Welcome ' + session['username'] +\
         '<br><a href="' + url_for('logout') + '">logout</a>'
+
 # Login button
 @app.route('/login')
 def login():
@@ -61,6 +64,7 @@ def login():
                 'login' +\
             '</a>' +\
         '</button>'
+
 # Checking credentials
 @app.route('processlogin')
 def process_login():
@@ -75,6 +79,7 @@ def process_login():
             return redirect(url_for('/books'))
 
     return render_template('index.html', error=error)
+
 # defining the class Books for SQLAlchemy
 class Books(Base):
     __tablename__ = 'Books'
@@ -124,12 +129,12 @@ session.add_all(Books=[{"id":1, " Author": "Moshin Hamid", "Title": "Moth Smoke"
 {"id":5, " Author": "Clare Fisher", "Title": "All the Good Things", "Genre": "Contemporary Fiction", "Owned by":"Library", "Format": "E-Audiobook"},
 {"id":6, " Author": "Salman Rushdie", "Title": "The Golden House", "Genre": "Contemporary Fiction", "Owned by":"Yourself", "Format": "Hardback"},
 {"id":7, " Author": "Andrea Camilleri", "Title": "The Potter's Field", "Genre": "Crime", "Owned by":"Yourself", "Format": "Paperback"},
-{"id":8, " Author": "", "Title": "Machine Learning For Dummies", "Genre": "Textbook", "Owned by":"Yourself", "Format": "Paperback"},
+{"id":8, " Author": "For Dummies", "Title": "Machine Learning For Dummies", "Genre": "Textbook", "Owned by":"Yourself", "Format": "Paperback"},
 {"id":9, " Author": "J. K. Rowling", "Title": "Harry Potter and the Deathly Hallows", "Genre": "Contemporary Fiction", "Owned by": "Yourself", "Format": "Hardback"},
 {"id":10, " Author": "Elena Ferrante", "Title": "Meine Geniale Freundin", "Genre": "Contemporary Fiction", "Owned by": "Yourself", "Format": "Hardback"},
-{"id":11, " Author": "", "Title": "Forensic Psychology", "Genre": "Textbook", "Owned by": "Yourself", "Format": "Paperback"},
+{"id":11, " Author": "For Dummies", "Title": "Forensic Psychology", "Genre": "Textbook", "Owned by": "Yourself", "Format": "Paperback"},
 {"id":12, " Author": "Melanie Raabe", "Title": "The Stranger Upstairs", "Genre": "Crime", "Owned by": "Library", "Format": "E-Audiobook"},
-{"id":13, " Author": "", "Title": "Python For Dummies", "Genre": "Non-Fiction", "Owned by": "Yourself", "Format": "Paperback"},
+{"id":13, " Author": "For Dummies", "Title": "Python For Dummies", "Genre": "Non-Fiction", "Owned by": "Yourself", "Format": "Paperback"},
 {"id":14, " Author": "Donna Leon", "Title": "Beastly Things", "Genre": "Crime", "Owned by": "Yourself", "Format": "Hardback"},
 {"id":15, " Author": "Charles Dickens", "Title": "Great Expectations", "Genre": "Classics", "Owned by": "Yourself", "Format": "Ebook"},
 {"id":16, " Author": "Ben Aaronovich", "Title": "Moon Over Soho", "Genre": "Crime", "Owned by": "Yourself", "Format": "Paperback"},
@@ -172,6 +177,8 @@ session.query(Books).filter_by(Author='James Patterson').count()
 d = Books.delete().where(Books.Author == ('James Patterson'))
 d.execute
 
+session.commit()
+
 # Defining nextID as a global variable
 global nextID
 nextID = 0
@@ -182,7 +189,7 @@ def getAll():
     return "In you current library" + str(id)
 
 # Create
-@app.route()
+@app.route('/')
 def createBook(id):
     if not request.json:
         abort(400)
@@ -243,6 +250,7 @@ def deleteBook(id):
     Books.remove(foundBooks[0])
     return jsonify({"complete":True})
 
+# Handling errors
 @app.errorhandler(404)
 def not_found404(error):
     return make_response( jsonify( {'error':'Not found' }), 404)

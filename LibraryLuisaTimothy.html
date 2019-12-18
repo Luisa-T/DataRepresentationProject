@@ -90,6 +90,7 @@
         function myFunction(){
           return showCreate();
         }
+        // CRUD operations
         function showCreate(){
             document.getElementById('showCreateButton').style.display="none"
             document.getElementById('BooksTable').style.display="none"
@@ -282,7 +283,6 @@
             "dataType": "JSON",
             contentType: "application/json; charset=utf-8",
             "success":function(result){
-               // console.log(result);
             document.getElementById("output").innerText = JSON.stringify(result);    
             },
             "error":function(xhr,status,error){
@@ -292,7 +292,6 @@
     }
     function deleteBooksAjax(){
         var Books = {}
-        //console.log(JSON.stringify('deleting '+id));
         $.ajax({
             "url": ""+encodeURI(Books),
             "method":"DELETE",
@@ -300,7 +299,6 @@
             "dataType": "JSON",
             contentType: "application/json; charset=utf-8",
             "success":function(result){
-                //console.log(result);
             document.getElementById("output").innerText = JSON.stringify(result);      
             },
             "error":function(xhr,status,error){
