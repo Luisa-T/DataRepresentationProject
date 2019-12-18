@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, session, request, models, abort, make_response, app, url_for, redirect
+from flask import Flask, jsonify, session, request, abort, make_response, app, url_for, redirect
 from flask_cors import CORS
 import sqlite3
 import mysql.connector
@@ -12,6 +12,7 @@ from sqlalchemy.util._collections import IdentitySet
 from sqlalchemy.ext.declarative import declarative_base
 from flask.templating import render_template
 from sqlalchemy.testing.config import db
+from requests import models
 
 CORS(app)
 # Storing sessions
