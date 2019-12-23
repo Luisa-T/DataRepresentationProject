@@ -18,7 +18,13 @@ import config as cfg
     #)
 # Python anywhere database I created, adding a pool and size
 class DAO():
-    db=""
+    db= mysql.connector.connect(
+        host = cfg.mysql['host'],
+        user = cfg.mysql['user'],
+        password = cfg.mysql['password'],
+        database = cfg.mysql['database'],
+        pool_name="Library_Pool"
+    )
     def connectToDB(self):
         self.db = mysql.connector.connect(
         host="LuTi.mysql.pythonanywhere-services.com",
@@ -32,13 +38,13 @@ class DAO():
     def __init__(self): 
         self.connectToDB()
     # Defining how to connect to the database
-    db = mysql.connector.connect(
-        host = cfg.mysql['localhost:3306'],
-        user = cfg.mysql['user'],
-        password = cfg.mysql['password'],
-        database = cfg.mysql['database'],
-        pool_name="Library_Pool"
-    )
+    #db = mysql.connector.connect(
+     #   host = cfg.mysql['localhost:3306'],
+      #  user = cfg.mysql['user'],
+       # password = cfg.mysql['password'],
+        #database = cfg.mysql['database'],
+        #pool_name="Library_Pool"
+    #)
     def getCursor(self):
         if not self.db.is_connected():
             self.connectToDB()

@@ -1,5 +1,5 @@
-from flask import Flask, jsonify, session, request, abort, make_response, app, url_for, redirect, flash, render_template, g
-from flask_cors import CORS
+from flask import Flask, jsonify, session, request, abort, app, make_response, url_for, redirect, flash, render_template, g
+from flask_cors import CORS, extension
 import sqlite3
 import mysql.connector
 import sqlalchemy
@@ -32,6 +32,7 @@ def after_request(response):
   """Close the databse connection after each request"""
   g.db.close()
   return response
+
 @app.route("/")
 def index():
     count = 0
