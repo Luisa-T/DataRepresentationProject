@@ -33,7 +33,7 @@ class DAO():
         password="D@t@rep19",
         database="LuTi$Library",
         pool_name="Library_Pool",
-        poolsize=10
+        poolsize=20
         )
     def __init__(self): 
         self.connectToDB()
